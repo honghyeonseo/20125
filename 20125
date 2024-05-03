@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자 맞추기 게임</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 5px;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>숫자 맞추기 게임</h1>
+    <p>1부터 100 사이의 숫자를 맞춰보세요.</p>
+    <input type="number" id="user-guess" min="1" max="100" placeholder="숫자를 입력하세요">
+    <button onclick="checkGuess()">확인</button>
+    <p id="result"></p>
+
+    <script>
+        // 컴퓨터가 선택한 숫자 생성
+        const targetNumber = Math.floor(Math.random() * 100) + 1;
+        console.log('정답:', targetNumber);
+
+        function checkGuess() {
+            const userInput = parseInt(document.getElementById('user-guess').value);
+            const resultDisplay = document.getElementById('result');
+
+            if (isNaN(userInput) || userInput < 1 || userInput > 100) {
+                resultDisplay.textContent = '1부터 100 사이의 숫자를 입력하세요.';
+            } else if (userInput === targetNumber) {
+                resultDisplay.textContent = '정답입니다! 축하합니다!';
+            } else if (userInput < targetNumber) {
+                resultDisplay.textContent = '입력한 숫자가 작습니다. 더 큰 숫자를 입력하세요.';
+            } else {
+                resultDisplay.textContent = '입력한 숫자가 큽니다. 더 작은 숫자를 입력하세요.';
+            }
+        }
+    </script>
+</body>
+</html>

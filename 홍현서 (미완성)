@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사과피하기 게임</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #player {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+        }
+        .apple {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="player"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const player = document.getElementById("player");
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const appleInterval = 1000; // milliseconds
+            let score = 0;
+
+            function getRandomPosition() {
+                const x = Math.floor(Math.random() * (screenWidth - 50));
+                const y = -50;
+                return { x, y };
+            }
+
+            function createApple() {
+                const apple = document.createElement("div");
+                apple.classList.add("apple");
+                const { x, y } = getRandomPosition();
+                apple.style.left = `${x}px`;
+                apple.style.top = `${y}px`;
+                document.body.appendChild(apple);
+
+                const appleIntervalId = setInterval(function() {
+                    const appleRect = apple.getBoundingClientRect();
+                    const playerRect = player.getBoundingClientRect();
+                    if (
+                        appleRect.bottom >= playerRect.top &&
+                        appleRect.left >= playerRect.left &&
+                        appleRect.right <= playerRect.right
+                    ) {
+                        apple.remove();
+                        score++;
+                        clearInterval(appleIntervalId);
+                        updateScore();
+                    } else if (appleRect.top >= screenHeight) {
+                        apple.remove();
+                        clearInterval(appleIntervalId);
+                    } else {
+                        apple.style.top = `${appleRect.top + 10}px`;
+                    }
+                }, 20);
+            }
+
+            function updateScore() {
+                document.title = `Score: ${score}`;
+            }
+
+            function moveRight() {
+                const playerRect = player.getBoundingClientRect();
+                if (playerRect.right < screenWidth) {
+                    player.style.left = `${playerRect.left + 10}px`;
+                }
+            }
+
+            document.addEventListener("keydown", function(event) {
+                const key = event.key;
+                if (key === "ArrowRight") {
+                    moveRight();
+                }
+            });
+
+            setInterval(createApple, appleInterval);
+        });
+    </script>
+</body>
+</html>

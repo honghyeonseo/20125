@@ -3,50 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>숫자 맞추기 게임</title>
+    <title>미로찾기 게임</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
         }
-        input[type="number"] {
-            width: 100px;
-            padding: 5px;
-            margin: 10px;
+        #maze {
+            margin: 20px auto;
+            position: relative;
+            width: 400px;
+            height: 400px;
+            background-color: #f0f0f0;
+            border: 2px solid #000;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+        #start {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+            background-color: #00ff00;
+        }
+        #finish {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            background-color: #ff0000;
         }
     </style>
 </head>
 <body>
-    <h1>숫자 맞추기 게임</h1>
-    <p>1부터 100 사이의 숫자를 맞춰보세요.</p>
-    <input type="number" id="user-guess" min="1" max="100" placeholder="숫자를 입력하세요">
-    <button onclick="checkGuess()">확인</button>
-    <p id="result"></p>
+    <h1>미로찾기 게임</h1>
+    <div id="maze">
+        <div id="start"></div>
+        <div id="finish"></div>
+    </div>
 
     <script>
-        // 컴퓨터가 선택한 숫자 생성
-        const targetNumber = Math.floor(Math.random() * 100) + 1;
-        console.log('정답:', targetNumber);
+        document.addEventListener("DOMContentLoaded", function() {
+            const start = document.getElementById("start");
+            const finish = document.getElementById("finish");
+            const maze = document.getElementById("maze");
 
-        function checkGuess() {
-            const userInput = parseInt(document.getElementById('user-guess').value);
-            const resultDisplay = document.getElementById('result');
+            let startRect = start.getBoundingClientRect();
 
-            if (isNaN(userInput) || userInput < 1 || userInput > 100) {
-                resultDisplay.textContent = '1부터 100 사이의 숫자를 입력하세요.';
-            } else if (userInput === targetNumber) {
-                resultDisplay.textContent = '정답입니다! 축하합니다!';
-            } else if (userInput < targetNumber) {
-                resultDisplay.textContent = '입력한 숫자가 작습니다. 더 큰 숫자를 입력하세요.';
-            } else {
-                resultDisplay.textContent = '입력한 숫자가 큽니다. 더 작은 숫자를 입력하세요.';
+            document.addEventListener("keydown", function(event) {
+                const key = event.key;
+                switch (key) {
+                    case "ArrowUp":
+                        moveStart(0, -10);
+                        break;
+                    case "ArrowDown":
+                        moveStart(0, 10);
+                        break;
+                    case "ArrowLeft":
+                        moveStart(-10, 0);
+                        break;
+                    case "ArrowRight":
+                        moveStart(10, 0);
+                        break;
+                }
+            });
+
+            function moveStart(dx, dy) {
+                start.style.left = `${startRect.left + dx}px`;
+                start.style.top = `${startRect.top + dy}px`;
+                startRect = start.getBoundingClientRect();
+                checkWin();
             }
-        }
-    </script>
-</body>
-</html>
+
+            function checkWin() {
+                const startRect = start.getBoundingClientRect();
+                const finishRect = finish.getBoundingClientRect();
+                if (Math.abs(startRect.left - finishRect.left) < 20 && Math.abs(startRect.top - finishRect.top) < 20) {
+                    alert("도착했습니다! 축하합니다!");
+                }
+            }
+        });
+    </script>5
